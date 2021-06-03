@@ -26,6 +26,10 @@
               placeholder="Enter your username"
               required
             />
+            <span
+              id="username-error"
+              class="hidden text-sm font-normal text-red-500"
+            ></span>
           </div>
           <div class="mt-8">
             <label
@@ -42,6 +46,10 @@
               placeholder="mike@gmail.com"
               required
             />
+            <span
+              id="email-error"
+              class="hidden text-sm font-normal text-red-500"
+            ></span>
           </div>
           <div class="mt-8">
             <div class="flex items-center justify-between">
@@ -60,6 +68,10 @@
               placeholder="Enter your password"
               required
             />
+            <span
+              id="password-error"
+              class="hidden text-sm font-normal text-red-500"
+            ></span>
           </div>
           <div class="mt-10">
             <button
@@ -75,7 +87,7 @@
         >
           Already have an account ?
           <a
-            href="http://localhost:5000/login"
+            href="/login"
             class="text-indigo-600 cursor-pointer hover:text-indigo-800"
             >Log in</a
           >
@@ -87,15 +99,63 @@
 
 <script>
   const form = document.querySelector('form');
+  const usernameInput = document.querySelector('#username');
+  const emailInput = document.querySelector('#email');
+  const passwordInput = document.querySelector('#password');
+  const usernameError = document.querySelector('#username-error');
+  const emailError = document.querySelector('#email-error');
+  const passwordError = document.querySelector('#password-error');
 
-  form.addEventListener('submit', (e) => {
+  form.addEventListener('submit', async (e) => {
     e.preventDefault();
 
     const username = form.username.value;
     const email = form.email.value;
     const password = form.password.value;
 
-    console.log(username, email, password);
+    try {
+      const res = await fetch('/signup', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ username, email, password }),
+      });
+      const data = await res.json();
+
+      if (data.status === 'fail') {
+        if (data.errors.username) {
+          usernameInput.classList.remove('border-gray-300');
+          usernameInput.classList.add('border-red-500');
+
+          usernameError.classList.remove('hidden');
+          usernameError.classList.add('inline-block');
+          usernameError.textContent = data.errors.username;
+        }
+        if (data.errors.email) {
+          emailInput.classList.remove('border-gray-300');
+          emailInput.classList.add('border-red-500');
+
+          emailError.classList.remove('hidden');
+          emailError.classList.add('inline-block');
+          emailError.textContent = data.errors.email;
+        }
+        if (data.errors.password) {
+          passwordInput.classList.remove('border-gray-300');
+          passwordInput.classList.add('border-red-500');
+
+          passwordError.classList.remove('hidden');
+          passwordError.classList.add('inline-block');
+          passwordError.textContent = data.errors.password;
+        }
+      } else if (data.status === 'success') {
+        location.assign('/');
+      }
+
+      console.log(data);
+    } catch (error) {
+      console.error(error);
+    }
   });
 </script>
 
