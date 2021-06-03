@@ -1,4 +1,6 @@
 const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
+
 const User = require('../models/User');
 
 const getSignUp = (req, res) => {
@@ -34,9 +36,41 @@ const postSignUp = async (req, res) => {
   }
 };
 
-const postLogin = (req, res) => {
-  console.log(req.body);
-  res.send('user logged in');
+const postLogin = async (req, res) => {
+  const { email, password } = req.body;
+
+  try {
+    const user = await User.findOne({ email });
+
+    if (user) {
+      const isPasswordCorrect = await bcrypt.compare(password, user.password);
+
+      if (isPasswordCorrect) {
+        res.status(200).json({
+          status: 'success',
+          message: 'Login success',
+          data: {
+            user: user._id,
+          },
+        });
+        return;
+      }
+
+      res.status(404).json({
+        status: 'fail',
+        message: 'Password is incorrect',
+      });
+      return;
+    }
+
+    res.status(404).json({
+      status: 'fail',
+      message: 'Email is incorrect',
+    });
+    return;
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 // HELPER
