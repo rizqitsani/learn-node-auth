@@ -46,6 +46,10 @@ const postLogin = async (req, res) => {
       const isPasswordCorrect = await bcrypt.compare(password, user.password);
 
       if (isPasswordCorrect) {
+        const token = createToken(user._id);
+
+        res.cookie('jwt', token, { httpOnly: true, maxAge: 259200000 });
+
         res.status(200).json({
           status: 'success',
           message: 'Login success',
