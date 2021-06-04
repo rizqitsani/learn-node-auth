@@ -3,6 +3,9 @@ require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
+
+const verifyToken = require('./middlewares/authMiddleware');
+
 const authRoutes = require('./routes/authRoutes');
 
 const app = express();
@@ -32,5 +35,5 @@ mongoose
   .catch();
 
 app.get('/', (req, res) => res.render('welcome'));
-app.get('/home', (req, res) => res.render('home'));
+app.get('/home', verifyToken, (req, res) => res.render('home'));
 app.use(authRoutes);
