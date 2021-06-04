@@ -1,14 +1,9 @@
 module.exports = {
-  purge: [],
+  purge: ['./views/**/*.{ejs}'],
   darkMode: false, // or 'media' or 'class'
   theme: {
     fontFamily: {
-      sans: [
-        'Segoe UI',
-        'Roboto',
-        'Arial',
-        'sans-serif',
-      ],
+      sans: ['Segoe UI', 'Roboto', 'Arial', 'sans-serif'],
     },
     extend: {},
   },

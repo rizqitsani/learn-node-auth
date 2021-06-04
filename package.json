@@ -4,7 +4,8 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "start": "npm run build:css && nodemon server.js",
+    "start": "node server.js",
+    "dev": "npm run build:css && nodemon server.js",
     "build:css": "postcss public/tailwind.css -o public/style.css"
   },
   "author": "",
