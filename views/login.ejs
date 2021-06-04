@@ -127,7 +127,7 @@
           passwordError.textContent = data.errors.password;
         }
       } else if (data.status === 'success') {
-        location.assign('/');
+        location.assign('/home');
       }
     } catch (error) {
       console.error(error);
