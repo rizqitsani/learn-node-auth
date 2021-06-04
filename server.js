@@ -31,5 +31,6 @@ mongoose
   })
   .catch();
 
-app.get('/', (req, res) => res.render('home'));
+app.get('/', (req, res) => res.render('welcome'));
+app.get('/home', (req, res) => res.render('home'));
 app.use(authRoutes);
