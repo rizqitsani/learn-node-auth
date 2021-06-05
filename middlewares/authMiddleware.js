@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken');
+const User = require('../models/User');
 
-const verifyToken = (req, res, next) => {
+const verifyToken = async (req, res, next) => {
   const token = req.cookies.jwt;
 
   if (!token) {
@@ -10,10 +11,19 @@ const verifyToken = (req, res, next) => {
   try {
     const decoded = jwt.verify(token, process.env.SECRET_KEY);
 
-    console.log(decoded);
+    const rawUser = await User.findById(decoded.id);
+
+    const user = {
+      username: rawUser.username,
+      email: rawUser.email,
+    };
+    res.locals.user = JSON.stringify(user);
+
     return next();
   } catch (err) {
+    res.locals.user = null;
     console.log(err);
+
     return res.redirect('login');
   }
 };
