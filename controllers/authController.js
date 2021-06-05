@@ -4,11 +4,24 @@ const bcrypt = require('bcrypt');
 const User = require('../models/User');
 
 const getSignUp = (req, res) => {
+  if (req.cookies.jwt) {
+    return res.redirect('/home');
+  }
+
   res.render('signup');
 };
 
 const getLogin = (req, res) => {
+  if (req.cookies.jwt) {
+    return res.redirect('/home');
+  }
+
   res.render('login');
+};
+
+const getLogout = (req, res) => {
+  res.cookie('jwt', '', { maxAge: 1 });
+  res.redirect('/');
 };
 
 const postSignUp = async (req, res) => {
@@ -87,6 +100,7 @@ const createToken = (id) => {
 module.exports = {
   getSignUp,
   getLogin,
+  getLogout,
   postSignUp,
   postLogin,
 };
