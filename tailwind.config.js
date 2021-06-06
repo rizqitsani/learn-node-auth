@@ -1,5 +1,8 @@
 module.exports = {
-  purge: ['./views/**/*.{ejs}'],
+  purge: {
+    enabled: true,
+    content: ['./views/**/*.ejs'],
+  },
   darkMode: false, // or 'media' or 'class'
   theme: {
     fontFamily: {
